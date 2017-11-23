@@ -4,16 +4,33 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var io = require('socket.io');
+var socket = require('socket.io');
 
 var api = require('./routes/api');
 
 var app = express();
-app.io = io();
+var io = socket();
+app.io = io;
 
 app.io.on('connection', (socket) => {
-  console.log('user connected', socket.id)
+ // Log whenever a user connects
+ console.log('user connected');
+ 
+     // Log whenever a client disconnects from our websocket server
+     socket.on('disconnect', function(){
+         console.log('user disconnected');
+     });
+ 
+     // When we receive a 'message' event from our client, print out
+     // the contents of that message and then echo it back to our client
+     // using `io.emit()`
+     socket.on('message', (message) => {
+         console.log("Message Received: " + message);
+         app.io.emit('message', {type:'new-message', text: message});    
+     });
 })
+
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
