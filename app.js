@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var socket = require('socket.io');
 
 var api = require('./routes/api');
+var ai = require('./services/ai');
 
 var app = express();
 var io = socket();
@@ -16,7 +17,12 @@ app.io.on('connection', (socket) => {
  // Log whenever a user connects
  console.log('user connected', socket.client.id);
 
-  
+ setTimeout(() => {sendBotMsg('Hallo, ich bin der Bot, wie kann ich helfen?')}, 1000)
+
+ setTimeout(() => {
+  // TODO make it work
+  // ai.message('hello').then(response => console.log(response))
+ })
   // Log whenever a client disconnects from our websocket server
   socket.on('disconnect', function(){
       console.log('user disconnected');
@@ -27,11 +33,14 @@ app.io.on('connection', (socket) => {
   // using `io.emit()`
   socket.on('message', (message) => {
       console.log("Message Received: " + message);
-      app.io.emit('message', {type:'new-message', text: message, client: socket.client.id.split('_')[0]});    
+
+      app.io.emit('message', {type:'new-message', text: message, client: socket.client.id.substr(-8)});    
   });
 })
 
-
+function sendBotMsg(msgText) {
+  app.io.emit('message', {text: 'new-message', text: msgText, client: 'bot'})
+}
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
