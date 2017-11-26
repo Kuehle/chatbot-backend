@@ -8,6 +8,7 @@ var socket = require('socket.io');
 
 var api = require('./routes/api');
 var ai = require('./services/ai');
+var intent = require('./services/intent');
 
 var app = express();
 var io = socket();
@@ -16,7 +17,7 @@ app.io = io;
 app.io.on('connection', (socket) => {
   console.log('user connected', socket.client.id);
 
-  setTimeout(() => {sendBotMsg('Hallo, ich bin der Bot, wie kann ich helfen?')}, 1000)
+  setTimeout(() => {sendBotMsg(intent.handle({entities: {intent: [{value: 'launch'}]}}))}, 1000)
 
   socket.on('disconnect', function(){
       console.log('user disconnected');
@@ -24,7 +25,7 @@ app.io.on('connection', (socket) => {
 
   socket.on('message', (message) => {
       app.io.emit('message', {type:'new-message', text: message, client: socket.client.id.substr(-8)});
-      ai.message(message).then((res) => sendBotMsg(res.entities.intent[0].value), (err) => console.log(err))    
+      ai.message(message).then((res) => sendBotMsg(intent.handle(res)), (err) => console.log(err))    
   });
 })
 
