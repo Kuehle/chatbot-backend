@@ -14,23 +14,17 @@ var io = socket();
 app.io = io;
 
 app.io.on('connection', (socket) => {
- // Log whenever a user connects
- console.log('user connected', socket.client.id);
+  console.log('user connected', socket.client.id);
 
- setTimeout(() => {sendBotMsg('Hallo, ich bin der Bot, wie kann ich helfen?')}, 1000)
+  setTimeout(() => {sendBotMsg('Hallo, ich bin der Bot, wie kann ich helfen?')}, 1000)
 
-  // Log whenever a client disconnects from our websocket server
   socket.on('disconnect', function(){
       console.log('user disconnected');
   });
 
-  // When we receive a 'message' event from our client, print out
-  // the contents of that message and then echo it back to our client
-  // using `io.emit()`
   socket.on('message', (message) => {
-      console.log("Message Received: " + message);
-
-      app.io.emit('message', {type:'new-message', text: message, client: socket.client.id.substr(-8)});    
+      app.io.emit('message', {type:'new-message', text: message, client: socket.client.id.substr(-8)});
+      // ai.message(message).then((res) => sendBotMsg(res.))    
   });
 })
 
@@ -43,7 +37,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

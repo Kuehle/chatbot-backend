@@ -1,4 +1,5 @@
 'use strict'
+require('dotenv').config()
 
 const ai = require('./ai')
 const expect = require('chai').expect
@@ -12,9 +13,6 @@ describe('Ai Service', () => {
         const messageResult = ai.message('hello')
         expect(messageResult.then).to.be.a('Function')
         expect(messageResult.catch).to.be.a('Function')
-    }),
-    it('should resolve to valid answer', () => {
-        ai.message('hello').then((data) => expect(data._text).to.have.keys('_test', 'entities', 'msg_id'))
     })
   })
 })
