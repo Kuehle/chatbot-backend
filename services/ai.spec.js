@@ -18,5 +18,6 @@ describe('Ai Service', () => {
       let aiResponse = await ai.message('hi')
       expect(aiResponse.entities.intent[0].value).to.equal('hello')
     })
+    // should not break -> no matter what should return a string
   })
 })

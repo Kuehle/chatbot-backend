@@ -24,7 +24,7 @@ app.io.on('connection', (socket) => {
 
   socket.on('message', (message) => {
       app.io.emit('message', {type:'new-message', text: message, client: socket.client.id.substr(-8)});
-      ai.message(message).then((res) => sendBotMsg(res.entities.intent[0].value))    
+      ai.message(message).then((res) => sendBotMsg(res.entities.intent[0].value), (err) => console.log(err))    
   });
 })
 
