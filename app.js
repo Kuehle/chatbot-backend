@@ -19,10 +19,6 @@ app.io.on('connection', (socket) => {
 
  setTimeout(() => {sendBotMsg('Hallo, ich bin der Bot, wie kann ich helfen?')}, 1000)
 
- setTimeout(() => {
-  // TODO make it work
-  ai.message('hello').then(response => console.log(response), (err) => console.log(err))
- })
   // Log whenever a client disconnects from our websocket server
   socket.on('disconnect', function(){
       console.log('user disconnected');
