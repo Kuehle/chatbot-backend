@@ -6,7 +6,7 @@ let handlers = {
         return `Hello there. You can also ask for help if you don't know what to ask.`
     },
     'help': (aiResponse) => {
-        return `If you just want to get started, you could ask for a random recipe. Or ask me like a meal in a category like Chicken or Vegetarian. If you have certain ingredients and want to know what recipes you could use them in ask me 'What can recepies use garlic and beef'.`
+        return `If you just want to get started, you could ask for a random recipe. Or ask me like a meal in a category like Chicken or Vegetarian. If you have certain ingredients and want to know what recipes you could use them in ask me 'What recepies use garlic and beef'.`
     },
     'unknown': (aiResponse) => {
         return `I'm not sure how I can help you with that`
@@ -22,6 +22,5 @@ let intentService = {
         }
     }
 }
-
 
 module.exports = intentService
