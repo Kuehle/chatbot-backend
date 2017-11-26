@@ -10,9 +10,13 @@ describe('Ai Service', () => {
       expect(ai.message).to.be.a('function')
     }),
     it('should return a promise', () => {
-        const messageResult = ai.message('hello')
-        expect(messageResult.then).to.be.a('Function')
-        expect(messageResult.catch).to.be.a('Function')
+      const messageResult = ai.message('hello')
+      expect(messageResult.then).to.be.a('Function')
+      expect(messageResult.catch).to.be.a('Function')
+    }),
+    it('should recognize hi as hello intent', async () => {
+      let aiResponse = await ai.message('hi')
+      expect(aiResponse.entities.intent[0].value).to.equal('hello')
     })
   })
 })
