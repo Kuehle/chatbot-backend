@@ -21,7 +21,7 @@ app.io.on('connection', (socket) => {
 
  setTimeout(() => {
   // TODO make it work
-  // ai.message('hello').then(response => console.log(response))
+  ai.message('hello').then(response => console.log(response), (err) => console.log(err))
  })
   // Log whenever a client disconnects from our websocket server
   socket.on('disconnect', function(){
