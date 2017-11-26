@@ -1,9 +1,15 @@
+var template = require('./template')
+var db = require('./db')
+
 let handlers = {
     'launch': (aiResponse) => {
         return `Hello there, how may I help you? I know a lot of recipes.`
     },
     'hello': (aiResponse) => {
         return `Hello there. You can also ask for help if you don't know what to ask.`
+    },
+    'random': async (aiResponse) => {
+        return template.build(await db.random())
     },
     'help': (aiResponse) => {
         return `If you just want to get started, you could ask for a random recipe. Or ask me like a meal in a category like Chicken or Vegetarian. If you have certain ingredients and want to know what recipes you could use them in ask me 'What recepies use garlic and beef'.`

@@ -29,8 +29,12 @@ app.io.on('connection', (socket) => {
   });
 })
 
-function sendBotMsg(msgText) {
-  app.io.emit('message', {text: 'new-message', text: msgText, client: 'bot'})
+function sendBotMsg(msg) {
+  if(typeof(msg) == 'string') {
+    app.io.emit('message', {text: 'new-message', text: msg, client: 'bot'})    
+  } else {
+    msg.then(msgText => app.io.emit('message', {text: 'new-message', text: msgText, client: 'bot'}))    
+  } 
 }
 
 // view engine setup
