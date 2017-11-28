@@ -34,6 +34,32 @@ let dbService = {
                 }
              }
         })
+    },
+    category: (aiResponse) => {
+        return search({
+            index: 'bot',
+            type: 'meals',
+            body: {
+                "size": 3,
+                "query": {
+                   "function_score": {
+                      
+                        "functions": [
+                            {
+                                "random_score": {
+                                "seed": '' + Math.random()
+                                }
+                            }
+                        ],
+                        "query": {
+                            "match": {
+                                "category": aiResponse.entities.category[0].value
+                            }
+                        }
+                   }
+                }
+             }
+        })
     }
 }
 
