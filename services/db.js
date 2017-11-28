@@ -10,7 +10,7 @@ function entitiesToQuery(aiResponse) {
             queryObject.match[entityKey] = aiResponse.entities[entityKey][0].value
         })
         console.log("queryObject", queryObject)
-        return queryObject
+        return Object.keys(queryObject.match).length > 0 ? queryObject : undefined
     } catch(e) {
         console.log(e)
         return
