@@ -13,10 +13,11 @@ let detailTemplates = {
 
 let listTemplates = {
     'list': (dbResponse) => {
-        let result = 'Here is a list of results:<br>'
+        let result = 'Here is a list of results:<ul>'
         for(let doc of dbResponse) {
-            result += doc._source.name + ' ' 
+            result += `<li>${doc._source? doc._source.name : doc.key}</li>` 
         }
+        result += '</ul>Do you want more? Is there something you\'d like to see the recipe of?'
         return result
     }
 }
