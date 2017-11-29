@@ -4,18 +4,27 @@ const client = new elasticsearch.Client({
 })
 
 function entitiesToQuery(aiResponse) {
-    var queryObject = {match:{}}
+    var queryObject = {bool: {must: []}}
+    let excludedEntities = {'intent': true, 'number': true}
     try {
-        Object.keys(aiResponse.entities).filter(key => key != 'intent').forEach(entityKey => {
-            queryObject.match[entityKey] = aiResponse.entities[entityKey][0].value
+        Object.keys(aiResponse.entities).filter(key => !excludedEntities[key] ).forEach(entityKey => {
+            let newMatchQuery = {match: {}}
+            newMatchQuery.match[entityKey] = aiResponse.entities[entityKey][0].value
+            queryObject.bool.must.push(newMatchQuery)
         })
-        console.log("queryObject", queryObject)
-        return Object.keys(queryObject.match).length > 0 ? queryObject : undefined
+        return queryObject.bool.must.length > 0 ? queryObject : undefined
     } catch(e) {
         console.log(e)
         return
     }
-   
+}
+
+function getSize(aiResponse) {
+    try{
+        return aiResponse.entities.number[0].value
+    } catch(e) {
+        return undefined
+    }
 }
 
 function search(searchObj) {
@@ -42,12 +51,13 @@ function aggregate(searchObj) {
 
 let dbService = {
     entitiesToQuery: entitiesToQuery,
+    getSize: getSize,
     random: (aiResponse) => {
         return search({
             index: 'bot',
             type: 'meals',
             body: {
-                "size": 1,
+                "size": getSize(aiResponse) || 1,
                 "query": {
                    "function_score": {
                       "functions": [
