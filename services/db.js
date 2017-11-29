@@ -6,6 +6,10 @@ const client = new elasticsearch.Client({
 function entitiesToQuery(aiResponse) {
     var queryObject = {bool: {must: []}}
     let excludedEntities = {'intent': true, 'number': true}
+    let search_query = freeText(aiResponse)
+    if(search_query) {
+        return search_query
+    }
     try {
         Object.keys(aiResponse.entities).filter(key => !excludedEntities[key] ).forEach(entityKey => {
             let newMatchQuery = {match: {}}
@@ -22,6 +26,19 @@ function entitiesToQuery(aiResponse) {
 function getSize(aiResponse) {
     try{
         return aiResponse.entities.number[0].value
+    } catch(e) {
+        return undefined
+    }
+}
+
+function freeText(aiResponse) {
+    try {
+        let multi_match = {
+            "query": aiResponse.entities.search_query[0].value,
+            "fields": [ "name^8", "category", "instructions", "ingredients" ]
+        }
+        return multi_match
+        
     } catch(e) {
         return undefined
     }
@@ -52,13 +69,16 @@ function aggregate(searchObj) {
 let dbService = {
     entitiesToQuery: entitiesToQuery,
     getSize: getSize,
+    freeText: freeText,
     random: (aiResponse) => {
         return search({
             index: 'bot',
             type: 'meals',
             body: {
                 "size": getSize(aiResponse) || 1,
-                "query": {
+                "query": freeText(aiResponse) ? {
+                    "multi_match": freeText(aiResponse)
+                } : {
                    "function_score": {
                       "functions": [
                          {
