@@ -7,8 +7,12 @@ function entitiesToQuery(aiResponse) {
     var queryObject = {bool: {must: []}}
     let excludedEntities = {'intent': true, 'number': true}
     let search_query = freeText(aiResponse)
+    let with_without = getWithWithout(aiResponse)
     if(search_query) {
-        return search_query
+        if(with_without)
+            return with_without.bool.must_not.multi_match.search_query
+        else 
+            return search_query
     }
     try {
         Object.keys(aiResponse.entities).filter(key => !excludedEntities[key] ).forEach(entityKey => {
@@ -42,6 +46,20 @@ function freeText(aiResponse) {
     } catch(e) {
         return undefined
     }
+}
+
+function getWithWithout(aiResponse) {
+    try {
+        if(aiResponse.entities.with_without[0].value == 'without') {
+            return {"bool" : {
+                "must_not": {}
+            }}
+        } else {
+            return undefined
+        }
+    } catch(e) {
+        return undefined  
+    } 
 }
 
 function search(searchObj) {

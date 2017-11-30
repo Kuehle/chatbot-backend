@@ -7,7 +7,7 @@ const expect = require('chai').expect
 const sampleCategoryRequest = JSON.parse('{"_text":"i search for a beef recipe","entities":{"category":[{"confidence":0.98531419324623,"value":"beef","type":"value"}],"intent":[{"confidence":0.99747320632025,"value":"category"}]},"msg_id":"06WXOToUeSlVsAvH3"}')
 const sampleQuantityRequest = JSON.parse('{"_text":"can you show me three recipes","entities":{"number":[{"confidence":1,"value":3,"type":"value"}],"intent":[{"confidence":0.98831868650642,"value":"random"}]},"msg_id":"0rTnidnEXj38Exnss"}')
 const sampleSearchRequest = JSON.parse('{"_text":"give me a recipe for fish tacos","entities":{"search_query":[{"suggested":true,"confidence":0.937685,"value":"fish taco","type":"value"}],"intent":[{"confidence":0.99871821327788,"value":"random"}]},"msg_id":"0rtrIDOenIO43dMJn"}')
-
+const sampleWithoutRequest = JSON.parse('{"_text":"give me a meal without mushrooms","entities":{"with_without":[{"confidence":0.97038290101664,"value":"without","type":"value"}],"search_query":[{"suggested":true,"confidence":0.93793,"value":"mushrooms","type":"value"}],"intent":[{"confidence":0.99900756388508,"value":"random"}]},"msg_id":"01mQMFMzJLmYd2U27"}')
 
 describe('DataBase Service', () => {
   describe('"random"', () => {
@@ -31,7 +31,6 @@ describe('DataBase Service', () => {
     }),
     it('should respond with a fitting document for freetext search query', async () => {
       let dbResponse = await db.random(sampleSearchRequest)
-      console.log("random search", dbResponse)
       expect(dbResponse[0]._source.name.match(/fish/i)).to.be.not.equal(null)
     })
   })
